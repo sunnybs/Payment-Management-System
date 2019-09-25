@@ -1,0 +1,42 @@
+﻿@using Payment_Management_System.Models
+@using Payment_Management_System.ViewModels
+@model Payment_Management_System.ViewModels.IndexViewModel
+
+
+
+<div id="@Model.Index" class="container position-selector">
+
+    <h3 style="margin-bottom: 1em;">Позиция платежа</h3>
+
+    <p>
+        <label>Cумма по позиции:</label><br />
+        <input type="number" min="0" asp-for="ViewPaymentPositions[Model.Index].PaymentPositionSum" data-val-number="Проверьте корректность данных" />
+        <span asp-validation-for="ViewPaymentPositions[Model.Index].PaymentPositionSum" class="text-danger"></span>
+    </p>
+
+    <p>
+        <label>Комментарий:</label><br />
+        <textarea type="text" class="form-control" rows="5" asp-for="ViewPaymentPositions[Model.Index].Comment"></textarea>
+    </p>
+    
+    @if (Model.ViewPaymentPositions?[Model.Index].NestedFilePath != null)
+    {
+        <p>
+            <label>
+                <strong>Приложенный файл:</strong>
+            </label>
+            <a asp-controller="File" asp-action="Download" asp-route-filePath="@Model.ViewPaymentPositions[Model.Index].NestedFilePath" asp-route-fileName="@Model.ViewPaymentPositions[Model.Index].NestedFileName">@Model.ViewPaymentPositions[Model.Index].NestedFileName</a><br/>
+            <small>Если файл нужно сохранить - его необходимо загрузить заново.</small>
+        </p>     
+    }
+
+    <p>
+        <label>Файл:</label><br/>
+        <input type="file" asp-for="ViewPaymentPositions[Model.Index].FileUpload.Value"/><br>
+        <span asp-validation-for="ViewPaymentPositions[Model.Index].FileUpload.Value" class="text-danger"></span>
+    </p>
+    
+    <button type="button" style="margin-top: 1em; margin-bottom: 1em;" class="btn btn-danger" onclick="DeletePosition(@Model.Index)">Удалить позицию</button>
+    <hr />
+</div>
+

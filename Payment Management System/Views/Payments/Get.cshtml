@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Информация";
+    Layout = "_Layout";
+}
+@model Payment_Management_System.Models.Payment
+
+
+<div class="container">
+    <h3>Основная информация</h3>
+</div>
+<hr/>
+
+<div class="container">
+
+
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <strong>
+                <u>Заявка #@Model.PaymentId</u>
+            </strong>
+        </li>
+        <li class="list-inline-item">
+            <a asp-controller="Payments" asp-action="Update" asp-route-id="@Model.PaymentId">Редактировать</a>
+        </li>
+        <li class="list-inline-item">
+            <a asp-controller="Payments" asp-action="DeletePayment" asp-route-id="@Model.PaymentId" class="text-danger">Удалить</a>
+        </li>
+    </ul>
+
+    <p>
+        <strong>ФИО:</strong> @Model.Name
+    </p>
+
+    <p>
+        <strong>Дата создания:</strong> @Model.Date
+    </p>
+
+    <p>
+        <strong>Cумма заявки:</strong> @Model.PaymentSum
+    </p>
+
+    <p>
+        <strong>Тип платежа:</strong> @Model.PaymentType.GetDisplayName()
+    </p>
+</div>
+<hr/>
+<div class="container">
+    <h3>Позиции заявки</h3>
+</div>
+<hr/>
+
+@{ var i = 1; }
+
+@foreach (var paymentPosition in Model.ViewPaymentPositions.Values)
+{
+    <div class="container">
+        <p>
+            <strong>Позиция: #@i</strong>
+        </p>
+        @{ i++; }
+
+        <p>
+            <strong>Cумма позиции:</strong> @paymentPosition.PaymentPositionSum
+        </p>
+        @if (paymentPosition.Comment != null)
+        {
+            <p>
+                <strong>Комментарий:</strong> @paymentPosition.Comment
+            </p>
+        }
+        @if (paymentPosition.NestedFilePath != null)
+        {
+            <p>
+                <label>
+                    <strong>Приложенный файл:</strong>
+                </label>
+                <a asp-controller="File" asp-action="Download" asp-route-filePath="@paymentPosition.NestedFilePath" asp-route-fileName="@paymentPosition.NestedFileName">@paymentPosition.NestedFileName</a>
+            </p>
+        }
+    </div>
+    <hr/>
+}

@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Добавить платеж";
+    Layout = "_Layout";
+}
+@using Payment_Management_System.Models
+@using Payment_Management_System.ViewModels
+@model Payment_Management_System.Models.Payment
+
+<script src="~/js/site.js"></script>
+
+<form asp-controller="Payments" asp-action="PostPayment" id="addForm" method="post" enctype="multipart/form-data">
+    <div class="container">
+        <h3>Основная информация</h3>
+    </div>
+
+    <div class="container">
+        <p>
+            <label>Фио:</label><br />
+            <input type="text" asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </p>
+        
+       <p>
+                <label>Cумма:</label><br />
+                <input type="number" min="0" asp-for="PaymentSum" data-val-number="Проверьте корректность данных"/>
+                <span asp-validation-for="PaymentSum" class="text-danger"></span>
+       </p>
+        
+
+        <p>
+            <label asp-for="PaymentType">Выберите тип платежа:</label><br />
+            <select asp-for="PaymentType" asp-items="Html.GetEnumSelectList<PaymentType>()"> </select>
+            <span asp-validation-for="PaymentType" class="text-danger"></span>
+        </p>
+    </div>
+    <hr />
+
+    <div id="positions">
+        <span asp-validation-for="ViewPaymentPositions" class="text-danger"></span>
+        @if (Model?.ViewPaymentPositions != null)
+        {
+            foreach (var paymentPos in Model.ViewPaymentPositions)
+            {
+                var index = new IndexViewModel { Index = paymentPos.Key };
+                await Html.RenderPartialAsync("_PartialPosition", index);
+            }
+        }
+        else
+        {
+            var index = new IndexViewModel { Index = 0 };
+            await Html.RenderPartialAsync("_PartialPosition", index);
+        }
+    </div>
+
+    <div class="container">
+    <p>
+        <input type="submit" class="btn btn-success" value="Отправить" />
+        <button type="button" class="btn btn-light" id="addButton" onclick="AddPosition()">Добавить позицию</button>
+    </p>
+    </div>
+</form>
+

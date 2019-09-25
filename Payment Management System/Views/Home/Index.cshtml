@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Все платежи";
+    Layout = "_Layout";
+}
+@using Payment_Management_System.Models
+@model Payment_Management_System.ViewModels.PaymentsWithFilterViewModel
+
+<div class="row">
+    <table class="table table-striped col-9" style="text-align: center">
+        <tr>
+            <th scope="col">Номер заявки</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Сумма</th>
+            <th scope="col">Тип платежа</th>
+        </tr>
+        @foreach (var payment in Model.Payments)
+        {
+            <tr>
+                <td><a asp-controller="Payments" asp-action="Get" asp-route-id="@payment.PaymentId">@payment.PaymentId</a></td>
+                <td>@payment.Name</td>
+                <td>@payment.Date</td>
+                <td>@payment.PaymentSum</td>
+                <td>@payment.PaymentType.GetDisplayName()</td>
+            </tr>
+        }
+    </table>
+    <div class="col-3">
+        <form asp-controller="Home" asp-action="UpdateIndex" method="post">
+            <p>
+                <label>От:</label><br />
+                <input type="datetime-local" asp-for="Filter.From" />
+            </p>
+            <p>
+                <label>До:</label><br />
+                <input type="datetime-local" asp-for="Filter.Until" />
+            </p>
+            <p>
+                <label>От суммы:</label><br />
+                <input type="text" asp-for="Filter.MinPaymentSum" />
+            </p>
+            <p>
+                <label>До суммы:</label><br />
+                <input type="text" asp-for="Filter.MaxPaymentSum" />
+            </p>
+            <p>
+                <label>По имени:</label><br />
+                <input type="text" asp-for="Filter.NameToFind" />
+            </p>
+            <p>
+                <label>По типу:</label><br />
+                <select asp-for="Filter.PaymentTypeToFind" asp-items="Html.GetEnumSelectList<PaymentType>()"> </select>
+            </p>
+
+            <input type="submit" class="btn btn-success" value="Обновить" />
+        </form>
+    </div>
+</div>
